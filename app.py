@@ -3,6 +3,7 @@ from models import Book
 from library_management import Library
 from search import search_by_title, search_by_author, search_by_publication_year
 
+
 app = Flask(__name__)
 library = Library()  # Instance of our library
 
@@ -15,6 +16,7 @@ library.add_book(Book("Flask", "Python", "123-4567899999", 2024))
 #API Endpoints
 
 @app.route('/books', methods=['POST', 'GET'])
+# Create a new book or get all available books
 def book_crud():
     if request.method == 'POST':
         data = request.get_json()
@@ -27,6 +29,8 @@ def book_crud():
         return jsonify(available_books)
 
 @app.route('/books/<isbn>', methods=['PUT'])
+# Update book status (borrow/return)
+# updating the books using the isbn number because it can be used to uniquely identify a book when using databases.
 def update_book_status(isbn):
     action = request.args.get('action') 
     if action == 'borrow':
