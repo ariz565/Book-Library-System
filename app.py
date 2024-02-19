@@ -12,6 +12,7 @@ library.add_book(Book("Pride and Prejudice", "Jane Austen", "978-0141439518", 18
 library.add_book(Book("To Kill a Mockingbird", "Harper Lee", "978-0061120084", 1960))
 library.add_book(Book("Flask", "Python", "123-4567899999", 2024))
 
+#API Endpoints
 
 @app.route('/books', methods=['POST', 'GET'])
 def book_crud():
@@ -19,7 +20,7 @@ def book_crud():
         data = request.get_json()
         new_book = Book(data['title'], data['author'], data['isbn'], data['publication_year'])
         library.add_book(new_book)
-        return jsonify({"message": "Book added successfully"}), 201
+        return jsonify({"message": "Book added successfully"}), 201 # 201 Created
 
     else:  # GET
         available_books = [book.__dict__ for book in library.books if book.status == "available"]
@@ -33,7 +34,7 @@ def update_book_status(isbn):
         if success:
             return jsonify({"message": "Book borrowed successfully"}), 200
         else:
-            return jsonify({"message": "Book unavailable or not found"}), 400 
+            return jsonify({"message": "Book unavailable or not found"}), 400 # 400 Bad Request
 
     elif action == 'return':
         success = library.return_book(isbn)
@@ -73,12 +74,13 @@ def delete_book(isbn):
     except ValueError:
         return jsonify({"message": "Book not found"}), 400
 
-
+# New endpoint for overdue books
 @app.route('/overdue', methods=['GET'])
 def get_overdue():
     overdue_books = library.get_overdue_books()
     overdue_list = [book.__dict__ for book in overdue_books]
     return jsonify(overdue_list)
 
+# Run the app
 if __name__ == '__main__':
     app.run(debug=True)
