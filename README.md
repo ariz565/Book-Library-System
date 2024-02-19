@@ -113,6 +113,14 @@ GET http://127.0.0.1:5000/overdue
     ```
 **This will start the Flask development server. Access the API through your browser or a tool like Postman (usually at http://127.0.0.1:5000/)**
 
+**Unit Testing:** 
+```sh
+pip install pytest
+```
+Open terminal run the command : pytest
+
+
+
 **Notes:**
 The current implementation uses placeholder data. Consider database integration.
 The overdue books feature assumes due date tracking logic .
