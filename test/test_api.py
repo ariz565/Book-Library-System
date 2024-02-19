@@ -1,5 +1,6 @@
 import pytest
-from library_management import Library, search_by_title, search_by_author, search_by_publication_year
+from library_management import Library
+from search import search_by_title, search_by_author, search_by_publication_year
 from models import Book
 import datetime
 
@@ -16,12 +17,6 @@ def library_with_books():
     library.add_book(Book("Flask", "Python", "123-4567899999", 2024)) 
     return library
 
-@pytest.fixture
-def library_with_books():
-    library = Library()  # Instantiate the library
-    library.add_book(Book("The Hobbit", "J.R.R Tolkien", 1937))
-    library.add_book(Book("Pride and Prejudice", "Jane Austen", 1813)) 
-    return library 
 
 # TEST CASES: 
 def test_add_book():
@@ -39,7 +34,7 @@ def test_remove_book(library_with_books):
 
 def test_remove_nonexistent_book(library_with_books):
     with pytest.raises(ValueError): 
-        library_with_books.remove_book("978-1234567890") 
+        library_with_books.remove_book("978-0141439518") 
 
 def test_borrow_book(library_with_books, new_book):
     library_with_books.add_book(new_book) 
@@ -55,7 +50,6 @@ def test_borrow_already_borrowed(library_with_books):
     assert not success
 
 def test_return_book(library_with_books):  
-    # First, simulate borrowing
     book = library_with_books.books[1]
     library_with_books.borrow_book(book.isbn)
     # Now, test the return
