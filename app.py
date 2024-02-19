@@ -9,6 +9,9 @@ library = Library()  # Instance of our library
 # Add dummy data (remove this when connecting to a database)
 library.add_book(Book("The Hobbit", "J.R.R. Tolkien", "978-0547928227", 1937))
 library.add_book(Book("Pride and Prejudice", "Jane Austen", "978-0141439518", 1813))
+library.add_book(Book("To Kill a Mockingbird", "Harper Lee", "978-0061120084", 1960))
+library.add_book(Book("Flask", "Python", "123-4567899999", 2024))
+
 
 @app.route('/books', methods=['POST', 'GET'])
 def book_crud():
@@ -58,12 +61,23 @@ def search():
         except ValueError:
             return jsonify({"message": "Invalid publication year"}), 400
 
-    return jsonify(results)
+    # Serialize book objects to dictionaries before returning
+    book_dicts = [book.__dict__ for book in results] 
+    return jsonify(book_dicts) 
+
+@app.route('/books/<isbn>', methods=['DELETE'])
+def delete_book(isbn):
+    try:
+        library.remove_book(isbn)
+        return jsonify({"message": "Book removed successfully"}), 200
+    except ValueError:
+        return jsonify({"message": "Book not found"}), 400
+
 
 @app.route('/overdue', methods=['GET'])
 def get_overdue():
     overdue_books = library.get_overdue_books()
-    overdue_list = [book.__dict__ for book in overdue_books]  # Serialize as needed
+    overdue_list = [book.__dict__ for book in overdue_books]
     return jsonify(overdue_list)
 
 if __name__ == '__main__':
